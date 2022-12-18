@@ -11,19 +11,25 @@ struct ConversationsView: View {
    
    @State var isShowingNewMessageView = false
    @State var showChat = false
+   @State var user: User?
+   @ObservedObject var viewModel = ConversationsViewModel()
    
    var body: some View {
       ZStack (alignment: .bottomTrailing) {
          
-         NavigationLink(destination: ChatView(), isActive: $showChat, label: {})
+         if let user {
+            NavigationLink(destination: LazyView(ChatView(user: user)),
+                           isActive: $showChat,
+                           label: {})
+         }
          
          ScrollView {
             VStack {
-               ForEach(0..<9) { _ in
+               ForEach(viewModel.recentMessages) { message in
                   NavigationLink {
-                     ChatView()
+                     LazyView(ChatView(user: message.user))
                   } label: {
-                     ConversationCell()
+                     ConversationCell(message: message)
                   }
                }
             }
@@ -44,7 +50,7 @@ struct ConversationsView: View {
          .clipShape(Circle())
          .padding()
          .sheet(isPresented: $isShowingNewMessageView) {
-            NewMessageView(show: $isShowingNewMessageView, startChat: $showChat)
+            NewMessageView(show: $isShowingNewMessageView, startChat: $showChat, user: $user)
          }
          
       }

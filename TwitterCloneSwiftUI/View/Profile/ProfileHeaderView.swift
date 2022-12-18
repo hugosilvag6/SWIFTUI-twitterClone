@@ -9,8 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct ProfileHeaderView: View {
-   @Binding var isFollowed: Bool
-   let viewModel: ProfileViewModel
+   @ObservedObject var viewModel: ProfileViewModel
    
    var body: some View {
       VStack {
@@ -32,22 +31,22 @@ struct ProfileHeaderView: View {
             .padding(.top, 8)
          HStack (spacing: 40) {
             VStack {
-               Text("12")
+               Text("\(viewModel.user.stats.followers)")
                   .font(.system(size: 16, weight: .bold))
                Text("Followers")
                   .font(.footnote)
                   .foregroundColor(.gray)
             }
             VStack {
-               Text("12")
+               Text("\(viewModel.user.stats.following)")
                   .font(.system(size: 16, weight: .bold))
-               Text("Followers")
+               Text("Following")
                   .font(.footnote)
                   .foregroundColor(.gray)
             }
          }.padding()
          
-         ProfileActionButtonView(viewModel: viewModel, isFollowed: $isFollowed)
+         ProfileActionButtonView(viewModel: viewModel)
          
          Spacer()
       }
